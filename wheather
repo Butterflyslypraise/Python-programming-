@@ -1,0 +1,60 @@
+pip install requests
+import requests
+
+def get_weather(api_key, location):
+    # OpenWeatherMap API endpoint for current weather
+    endpoint = "http://api.openweathermap.org/data/2.5/weather"
+
+    # API parameters (location and API key)
+    params = {
+        'q': location,
+        'appid': api_key,
+        'units': 'metric'  # You can change to 'imperial' for Fahrenheit
+    }
+
+    # Make API request
+    try:
+        response = requests.get(endpoint, params=params)
+        response.raise_for_status()
+    except requests.RequestException as e:
+        print(f"Error making API request: {e}")
+        return None
+
+    # Parse and extract relevant information from the API response
+    data = response.json()
+    if 'main' in data and 'weather' in data and 'wind' in data:
+        weather_info = {
+            'temperature': data['main']['temp'],
+            'humidity': data['main']['humidity'],
+            'wind_speed': data['wind']['speed'],
+            'description': data['weather'][0]['description']
+        }
+        return weather_info
+    else:
+        print("Error: Unable to retrieve weather information.")
+        return None
+
+def display_weather(weather_info, location):
+    # Display weather information
+    print(f"Weather information for {location}:")
+    print(f"Temperature: {weather_info['temperature']}°C")
+    print(f"Humidity: {weather_info['humidity']}%")
+    print(f"Wind Speed: {weather_info['wind_speed']} m/s")
+    print(f"Description: {weather_info['description']}")
+
+if __name__ == "__main__":
+    # Replace 'YOUR_API_KEY' with your actual OpenWeatherMap API key
+    api_key = '9437d54181962edcf1e5e4bb70a82610'
+
+    # Get user input for location
+    location = input("Enter city name or zip code: ")
+
+    # Get weather information
+    weather_info = get_weather(api_key, location)
+
+    if weather_info:
+        # Display weather information
+        display_weather(weather_info, location)
+    else:
+        print("Unable to retrieve weather information.")
+
