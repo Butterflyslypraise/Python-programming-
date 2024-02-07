@@ -1,0 +1,65 @@
+import random
+
+def load_questions():
+    # Add your quiz questions here
+    questions = [
+        {
+            'question': 'What is the capital of France?',
+            'options': ['Berlin', 'Madrid', 'Paris', 'Rome'],
+            'correct_answer': 'Paris'
+        },
+        {
+            'question': 'Which planet is known as the Red Planet?',
+            'options': ['Mars', 'Venus', 'Jupiter', 'Saturn'],
+            'correct_answer': 'Mars'
+        },
+        # Add more questions as needed
+    ]
+    return questions
+
+def present_question(question):
+    print(question['question'])
+    for i, option in enumerate(question['options'], 1):
+        print(f"{i}. {option}")
+
+    user_answer = input("Your answer (enter the option number): ")
+    return user_answer
+
+def evaluate_answer(user_answer, correct_answer):
+    return user_answer.lower() == correct_answer.lower()
+
+def quiz_game():
+    print("Welcome to the Quiz Game!")
+    print("You will be asked a series of multiple-choice questions.")
+
+    questions = load_questions()
+    score = 0
+
+    for question in random.sample(questions, len(questions)):
+        user_answer = present_question(question)
+        correct_answer = question['correct_answer']
+
+        if evaluate_answer(user_answer, correct_answer):
+            print("Correct!\n")
+            score += 1
+        else:
+            print(f"Incorrect! The correct answer is {correct_answer}.\n")
+
+    print("Quiz completed!")
+    print(f"Your final score is: {score}/{len(questions)}")
+
+    # Provide feedback based on the score
+    if score == len(questions):
+        print("Congratulations! You got all the questions right.")
+    elif score >= len(questions) / 2:
+        print("Good job! You did well.")
+    else:
+        print("Keep practicing. You can do better next time.")
+
+if __name__ == "__main__":
+    while True:
+        quiz_game()
+
+        play_again = input("Do you want to play again? (yes/no): ")
+        if play_again.lower() != 'yes':
+            break
